@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Avatar, Box, Container, Grid, TextField, Card, CardContent, Button, Typography, makeStyles } from '@material-ui/core';
-import { signin, isAuthenticated } from '../../helpers/AuthHelper';
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Container, Grid, TextField, Card, CardContent, Button, Typography, makeStyles } from '@material-ui/core';
+import { verifyUser, isAuthenticated } from '../../helpers/AuthHelper';
 
 const useStyle = makeStyles((theme) => ({
     card:{
@@ -16,18 +16,11 @@ const useStyle = makeStyles((theme) => ({
     title: {
         textAlign: "center"
     },
+    subtitle:{
+        paddingLeft: '20px',
+    },
     field: {
         marginTop: '8px'
-    },
-    links: {
-        marginTop: '10px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    link:{
-        color: 'blue',
-        textDecoration: 'none',
     },
     resp: {
         display: 'block',
@@ -36,14 +29,15 @@ const useStyle = makeStyles((theme) => ({
     }
 }))
 
-const SignIn = () => {
+const VerifyUser = () => {
     const classes = useStyle();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(location.state);
     const [emailError, setEmailError] = useState(false);
-    const [password, setPassword] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
+    const [otp, setOTP] = useState('');
+    const [otpError, setOtpError] = useState(false);
     const [response, setResponse] = useState('');
 
     if(isAuthenticated()){
@@ -54,28 +48,30 @@ const SignIn = () => {
 
     const handleSignIn = (e) => {
         e.preventDefault();
+
         setEmailError(false);
-        setPasswordError(false);
+        setOtpError(false);
 
         if(email===''){
             setEmailError(true);
         }
-        if(password===''){
-            setPasswordError(true);
+        if(otp===''){
+            setOtpError(true);
         }
-        if(email&&password){
-            signin(email, password)
+        if(email && otp){
+            verifyUser(email, otp)
             .then(res => {
                 if(res.status === 'success'){
-                    navigate("/");
+                    alert("Your account is verified successfully. Please login to continue")
+                    navigate("/signin");
                 } else {
-                    setResponse(res.message);
+                    setResponse("Invalid OTP");
                 }
             })
             .catch(err => console.log(err));
         }
-        setEmail('');
-        setPassword('');
+        // setEmail('');
+        // setOTP('');
     }
 
     return (
@@ -84,11 +80,11 @@ const SignIn = () => {
             <Grid item xs={12} sm={6} md={4} >
                 <Card className={classes.card} variant="outlined">
                     
-                    <Box display="flex" justifyContent="center" alignItems="center">
-                        <Avatar className={classes.avatar} />
-                    </Box>
                     <Typography variant="h4" className={classes.title}>
-                        Sign In
+                        Please Verify Your Account
+                    </Typography>
+                    <Typography variant="caption" className={classes.subtitle}>
+                        Check your registerd email for the OTP
                     </Typography>
                     <Typography className={classes.resp}>{response}</Typography>
                     <CardContent>
@@ -105,14 +101,14 @@ const SignIn = () => {
                             />
                             <TextField
                                 className={classes.field}
-                                type="password"
-                                label="Password"
+                                type="text"
+                                label="OTP"
                                 variant="outlined"
                                 fullWidth
                                 required
-                                error={passwordError}
-                                value={password}
-                                onChange={(e)=>setPassword(e.target.value)}
+                                error={otpError}
+                                value={otp}
+                                onChange={(e)=>setOTP(e.target.value)}
                             />
                             <Button
                                 className={classes.field}
@@ -120,13 +116,8 @@ const SignIn = () => {
                                 variant="contained"
                                 color="primary"
                                 fullWidth
-                            >Sign In</Button>
+                            >Verify</Button>
                         </form>
-                        <div className={classes.links}>
-                            <Link to="/signup" className={classes.link}>New Registration</Link>
-                            <Link to="#" className={classes.link}>Forget Password</Link>
-                            <Link to="/verifyuser" className={classes.link}>Verify Account</Link>
-                        </div>
                     </CardContent>
                 </Card>
             </Grid>
@@ -135,4 +126,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default VerifyUser
