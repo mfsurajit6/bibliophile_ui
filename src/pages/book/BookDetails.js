@@ -6,6 +6,7 @@ import PublicOutlinedIcon from '@material-ui/icons/PublicOutlined';
 import MenuBookOutlinedIcon from '@material-ui/icons/MenuBookOutlined';
 import ClosedCaptionOutlinedIcon from '@material-ui/icons/ClosedCaptionOutlined';
 import { getBookDetails } from '../../helpers/BookAPICalles';
+import AddBook from '../../components/AddBook';
 
 const useStyles = makeStyles(()=>({
     container: {
@@ -33,6 +34,9 @@ const useStyles = makeStyles(()=>({
     wrapIcon: {
         verticalAlign: 'middle',
         display: 'inline-flex',
+    },
+    linkIcon:{
+        marginRight: '5px',
     },
     description:{
         textAlign: 'justify'
@@ -86,12 +90,9 @@ const BookDetails = () => {
                     </div>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                    {/* Add to shelf */}
-                    <form></form>
+                    <AddBook />
                 </Grid>
             </Grid>
-            {/* Book Id: {JSON.stringify(location.state)}
-            {JSON.stringify(bookDetails)} */}
         </Container>
     )
 }

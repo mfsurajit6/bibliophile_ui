@@ -1,14 +1,13 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {Link, useNavigate} from 'react-router-dom'
-import { AppBar, Button, makeStyles, Toolbar, Typography, IconButton, InputAdornment, TextField } from '@material-ui/core'
+import { AppBar, Button, makeStyles, Toolbar, Typography} from '@material-ui/core'
 import { isAuthenticated, signout } from '../helpers/AuthHelper'
-import { SearchOutlined } from '@material-ui/icons'
+import Search from './Search'
 
 
 const useStyle = makeStyles((theme) => ({
     logo:{
-        // flexGrow: 1
-        display: 'inline-block',
+        display: 'inline',
         marginRight: '10px'
     },
     toolbar:{
@@ -16,12 +15,12 @@ const useStyle = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
-    searchField: {
-        backgroundColor: 'white',
-        paddingLeft: '3px',
-        borderBottom: '0px', 
-        border: '1px solid white',
-        borderRadius: '3px'
+    logoSearch:{
+        display: 'felx',
+        flexGrow: 1
+    },
+    search: {
+        display: 'inline'
     }
 }))
 
@@ -31,39 +30,20 @@ const Navbar = () => {
     const classes = useStyle();
     const navigate = useNavigate();
 
-    const [searchKey, setSearchKey] = useState('');
-    
-    const handleSearch = () => {
-        console.log(searchKey);
-        navigate("/searchresult");
-    }
-
     return (
         <AppBar position="static">
             <Toolbar className={classes.toolbar}>
-                <div>
+                <div className={classes.logoSearch}>
                     <Typography variant="h6" className={classes.logo}>
                         Bibliophile
                     </Typography>
-                {
-                    isAuthenticated() && (
-                        <TextField
-                        className={classes.searchField}
-                        value={searchKey}
-                        onChange={(e) => setSearchKey(e.target.value)}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton onClick={handleSearch}>
-                                        <SearchOutlined />
-                                    </IconButton>
-                                </InputAdornment>
+                    <div className={classes.search}>
+                        {
+                            isAuthenticated() && (
+                                <Search />
                             )
-                        }}
-                    />
-                    )
-                }
-                    
+                        }
+                    </div>
                 </div>
                 <div>
                     <Button color='inherit' component={Link} to="/" >Home</Button>
